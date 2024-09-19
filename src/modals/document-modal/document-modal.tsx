@@ -101,7 +101,12 @@ export default function DocumentModal({ document }: DocumentModalProps) {
             <Edit />
           </IconButton>
         ) : (
-          <Button onClick={handleOpen} variant="contained" startIcon={<Add />}>
+          <Button
+            sx={{ width: { xs: '100%', md: 'auto' } }}
+            onClick={handleOpen}
+            variant="contained"
+            startIcon={<Add />}
+          >
             Создать документ
           </Button>
         )}

@@ -35,8 +35,8 @@ export default function AuthPage() {
         padding: 0,
       }}
     >
-      <Box sx={{ maxWidth: 400, mx: 'auto', p: 0 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+      <Box sx={{ maxWidth: 400, mx: 'auto', p: 2 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
           Вход
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -58,7 +58,7 @@ export default function AuthPage() {
             margin="normal"
             required
           />
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" sx={{ width: '100%', mt: 2 }}>
             Войти
           </Button>
         </form>

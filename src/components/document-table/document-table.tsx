@@ -1,4 +1,15 @@
-import { TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table, Box, TextField } from '@mui/material';
+import {
+  TableContainer,
+  Paper,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Table,
+  Box,
+  TextField,
+  useMediaQuery,
+} from '@mui/material';
 import { DocumentsType, DocumentType } from '../../types/document';
 import { formatDateTime } from '../../utils/format-date-time';
 import DocumentModal from '../../modals/document-modal/document-modal';
@@ -8,8 +19,19 @@ import Loader from '../loader/loader';
 import { RequestStatus } from '../../types/request-status';
 import { Search } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import React from 'react';
+import DocumentCard from '../document-card/document-card';
 
-interface DocumentProps extends DocumentType {
+const HEAD_ROW_ITEMS = [
+  'Номер сотрудника',
+  'Тип документа',
+  'Название документа',
+  'Статус документа',
+  'Подпись компании',
+  'Подпись сотрудника',
+];
+
+interface DocumentProps {
   [key: string]: string | number | Date | null;
 }
 
@@ -18,6 +40,7 @@ export default function DocumentTable() {
   const documents = useAppSelector((state) => state.documents.documents.items);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [documentsData, setDocumentsData] = useState<DocumentsType>([]);
+  const isDesktop = useMediaQuery('(min-width: 1200px)');
 
   const getSearchingDocuments = (documents: DocumentsType, query: string): DocumentsType => {
     if (!query) {
@@ -57,58 +80,92 @@ export default function DocumentTable() {
     return <Loader />;
   }
 
+  const createTableHeadRow = (items: string[], isDesktop: boolean) => {
+    if (!isDesktop) {
+      return '';
+    }
+    return (
+      <TableRow>
+        {items.map((item) => (
+          <TableCell align="right" key={item}>
+            {item}
+          </TableCell>
+        ))}
+      </TableRow>
+    );
+  };
+
+  const createDesktopTableRow = (document: DocumentType) => {
+    return (
+      <TableRow key={document.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+        <TableCell align="right">{document.employeeNumber}</TableCell>
+        <TableCell align="right">{document.documentType}</TableCell>
+        <TableCell align="right">{document.documentName}</TableCell>
+        <TableCell align="right">{document.documentStatus}</TableCell>
+        <TableCell align="right">
+          {document.companySignatureName}{' '}
+          {document.companySigDate && document.companySignatureName
+            ? `от ${formatDateTime(document?.companySigDate)}`
+            : ''}
+        </TableCell>
+        <TableCell align="right">
+          {document.employeeSignatureName}{' '}
+          {document.employeeSigDate && document.employeeSignatureName
+            ? `от ${formatDateTime(document?.employeeSigDate)}`
+            : ''}
+        </TableCell>
+        <TableCell sx={{ maxWidth: '100px' }} align="right">
+          {
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: { sx: 0, md: 1 } }}>
+              <DocumentModal document={document} />
+              <DocumentDeleteDialog documentID={document.id} />
+            </Box>
+          }
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+  const createTableBodyRows = (documents: DocumentsType, isDesktop: boolean) => {
+    return documents.map((document) =>
+      isDesktop ? createDesktopTableRow(document) : <DocumentCard key={document.id} document={document} />,
+    );
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
-      <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-start', gap: 4, width: '100%' }}>
+      <Box
+        sx={{
+          ml: { xs: 2, sm: 0 },
+          display: 'flex',
+          alignItems: { xs: 'flex-start', sm: 'flex-start', md: 'flex-start', lg: 'center' },
+          justifyContent: 'flex-start',
+          gap: { sx: 1, sm: 2 },
+          width: '90%',
+          flexDirection: {
+            xs: 'column',
+            sm: 'column',
+            md: 'column',
+            lg: 'row',
+          },
+        }}
+      >
         <DocumentModal document={null} />
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', width: '50%' }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-end', width: '60%' }}>
           <Search sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
           <TextField
             onChange={onSearchQueryChange}
             id="input-with-sx"
             label="Поиск по ключевым словам"
             variant="standard"
-            sx={{ width: '50%' }}
+            sx={{ width: { xs: '100%', sm: '250px', md: '250px', lg: '250px' } }}
           />
         </Box>
       </Box>
       <TableContainer sx={{ borderRadius: '10px' }} component={Paper}>
-        <Table stickyHeader sx={{ minWidth: 650 }} size="small" aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="right">Номер сотрудника</TableCell>
-              <TableCell align="right">Тип документа</TableCell>
-              <TableCell align="right">Название документа</TableCell>
-              <TableCell align="right">Статус документа</TableCell>
-              <TableCell align="right">Подпись компании</TableCell>
-              <TableCell align="right">Подпись сотрудника</TableCell>
-              <TableCell align="right">Дата подписи компании</TableCell>
-              <TableCell align="right">Дата подписи сотрудника</TableCell>
-              <TableCell align="right"></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {documentsData?.map((document) => (
-              <TableRow key={document.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell align="right">{document.employeeNumber}</TableCell>
-                <TableCell align="right">{document.documentType}</TableCell>
-                <TableCell align="right">{document.documentName}</TableCell>
-                <TableCell align="right">{document.documentStatus}</TableCell>
-                <TableCell align="right">{document.companySignatureName}</TableCell>
-                <TableCell align="right">{document.employeeSignatureName}</TableCell>
-                <TableCell align="right">{formatDateTime(document?.companySigDate)}</TableCell>
-                <TableCell align="right">{formatDateTime(document?.employeeSigDate)}</TableCell>
-                <TableCell align="right">
-                  {
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                      <DocumentModal document={document} />
-                      <DocumentDeleteDialog documentID={document.id} />
-                    </Box>
-                  }
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+        <Table stickyHeader size="small" aria-label="simple table">
+          <TableHead>{createTableHeadRow(HEAD_ROW_ITEMS, isDesktop)}</TableHead>
+          <TableBody>{createTableBodyRows(documentsData, isDesktop)}</TableBody>
         </Table>
       </TableContainer>
     </Box>

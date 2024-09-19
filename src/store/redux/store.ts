@@ -12,9 +12,9 @@ const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
+      .concat(authHandlerMiddleware)
       .concat(errorHandlerMiddleware)
-      .concat(successHandlerMiddleware)
-      .concat(authHandlerMiddleware),
+      .concat(successHandlerMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

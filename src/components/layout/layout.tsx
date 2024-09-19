@@ -63,7 +63,7 @@ function PageContent() {
         py: 4,
         display: 'flex',
         flexDirection: 'column',
-        ml: { sm: '10px' },
+        ml: { sx: '20px', sm: '10px' },
       }}
     >
       <Outlet />

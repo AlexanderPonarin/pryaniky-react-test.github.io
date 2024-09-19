@@ -5,10 +5,10 @@ export default function MainFoldersOverview() {
   return (
     <Box display="flex" flexWrap="wrap" justifyContent="flex-start" gap={2} flexDirection="column">
       <Box display="flex" flexWrap="wrap" justifyContent="flex-start" gap={2}>
-        <Card sx={{ maxWidth: { xs: 150, sm: 150, md: 200, lg: 250, xl: 300 } }}>
+        <Card sx={{ width: { xs: 200, sm: 200, md: 200, lg: 250, xl: 300 } }}>
           <CardMedia
             sx={{ height: { xs: 80, sm: 150, md: 150, lg: 150, xl: 200 } }}
-            image="https://i.pinimg.com/564x/56/78/fb/5678fb3877b15ca70ce4b65a3f0993ed.jpg"
+            image="./images/documents-folder-overview-image.webp"
             title="documents"
           />
           <CardContent>

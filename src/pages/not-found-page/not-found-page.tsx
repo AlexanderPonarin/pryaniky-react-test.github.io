@@ -24,7 +24,7 @@ export default function NotFoundPage() {
           alignItems="center"
           flexDirection="column"
         >
-          <img style={{ maxWidth: '100%' }} src="/images/not-found-image.jpg" alt="Not Found" className="mb-4" />
+          <img style={{ maxWidth: '100%' }} src="/images/not-found-image.webp" alt="Not Found" className="mb-4" />
         </Box>
         <Box>
           <Typography sx={{ fontSize: 100, fontWeight: 'bold', textAlign: 'center', mb: 2, color: '#BEE6D6' }}>

@@ -16,7 +16,7 @@ export const useCheckAuth = ({ navigate }: Props) => {
   useEffect(() => {
     if (!token) {
       navigate('/auth');
-      dispatch(setTokenStatus(TokenStatus.EXPIRED));
+      dispatch(setTokenStatus(null));
     }
     if (token) {
       dispatch(setTokenStatus(TokenStatus.ACTIVE));

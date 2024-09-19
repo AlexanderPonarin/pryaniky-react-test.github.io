@@ -20,8 +20,8 @@ function App() {
 
   const navigate = useNavigate();
 
-  useShowMessage();
   useCheckAuth({ navigate });
+  useShowMessage();
 
   useEffect(() => {
     if (tokenStatus === TokenStatus.ACTIVE) {
